@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
+    'gamesearch.apps.GamesearchConfig',
     'djangobower',
     'django.contrib.admin',
     'django.contrib.auth',
