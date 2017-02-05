@@ -13,10 +13,59 @@
     <title>Google For Gamer</title>
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
 
     <!-- Custom CSS -->
-    <link href="{% static 'css/shop-homepage.css' %}" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+        }
+
+        .slide-image {
+            width: 100%;
+        }
+
+        .carousel-holder {
+            margin-bottom: 30px;
+        }
+
+        .carousel-control,
+        .item {
+            border-radius: 4px;
+        }
+
+        .caption {
+            height: 130px;
+            overflow: hidden;
+        }
+
+        .caption h4 {
+            white-space: nowrap;
+        }
+
+        .thumbnail img {
+            width: 100%;
+        }
+
+        .ratings {
+            padding-right: 10px;
+            padding-left: 10px;
+            color: #d17581;
+        }
+
+        .thumbnail {
+            padding: 0;
+        }
+
+        .thumbnail .caption-full {
+            padding: 9px;
+            color: #333;
+        }
+
+        footer {
+            margin: 50px 0;
+        }
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -268,10 +317,10 @@
     <!-- /.container -->
 
     <!-- jQuery -->
-    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
 
 </body>
 
