@@ -89,7 +89,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Home Page</a>
+                <a class="navbar-brand" href="/">Home Page</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -157,11 +157,11 @@
 
                 </div>
 
-                <div class="row">
+                <div class="row carousel-holder">
                     <form method="post">
                         {% csrf_token %}
                         <div class="col-md-6">
-                            <input type="text" class="form-control" name="game">
+                            <input type="text" class="form-control" name="game" placeholder="Type the name of your game">
                         </div>
                         <div class="col-md-2">
                             <button class="btn btn-primary" type="submit">Search</button>
@@ -171,17 +171,15 @@
 
                 <div class="row">
                     {% for g in games %}
-                        <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
                             <div class="thumbnail">
                                 <img src="http://placehold.it/320x150" alt="">
                                 <div class="caption">
-                                    <h4 class="pull-right">$24.99</h4>
-                                    <h4><a href="#">First Product</a>
-                                    </h4>
+                                    <h4><a href="#">{{ g.name }}</a></h4>
                                     <p>{{ g.name }}</p>
                                 </div>
                                 <div class="ratings">
-                                    <p class="pull-right">15 reviews</p>
+                                    <h4 class="pull-right">$24.99</h4>
                                     <p>
                                         <span class="glyphicon glyphicon-star"></span>
                                         <span class="glyphicon glyphicon-star"></span>
