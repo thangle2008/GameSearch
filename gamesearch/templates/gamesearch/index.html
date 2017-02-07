@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load search_extras %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,56 +17,7 @@
     <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
 
     <!-- Custom CSS -->
-    <style>
-        body {
-            padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-        }
-
-        .slide-image {
-            width: 100%;
-        }
-
-        .carousel-holder {
-            margin-bottom: 30px;
-        }
-
-        .carousel-control,
-        .item {
-            border-radius: 4px;
-        }
-
-        .caption {
-            height: 130px;
-            overflow: hidden;
-        }
-
-        .caption h4 {
-            white-space: nowrap;
-        }
-
-        .thumbnail img {
-            width: 100%;
-        }
-
-        .ratings {
-            padding-right: 10px;
-            padding-left: 10px;
-            color: #d17581;
-        }
-
-        .thumbnail {
-            padding: 0;
-        }
-
-        .thumbnail .caption-full {
-            padding: 9px;
-            color: #333;
-        }
-
-        footer {
-            margin: 50px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'gamesearch/css/main.css' %}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -171,21 +123,27 @@
 
                 <div class="row">
                     {% for g in games %}
-                        <div class="col-sm-12 col-lg-6 col-md-6">
+                        <div class="col-sm-12 col-lg-3 col-md-3">
                             <div class="thumbnail">
-                                <img src="http://placehold.it/320x150" alt="">
+                                {% if g.cover %}
+                                    <img class="img-responsive" src="{{ g.cover.url }}" alt="">
+                                {% else %}
+                                    <img class="img-responsive" src="{% static 'gamesearch/images/No_Cover.jpg' %}" alt="">
+                                {% endif %}
                                 <div class="caption">
                                     <h4><a href="#">{{ g.name }}</a></h4>
-                                    <p>{{ g.name }}</p>
+                                    <p>{{ g.summary }}</p>
                                 </div>
                                 <div class="ratings">
                                     <h4 class="pull-right">$24.99</h4>
                                     <p>
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        <span class="glyphicon glyphicon-star"></span>
-                                        <span class="glyphicon glyphicon-star"></span>
+                                        {% if g.rating %}
+                                            {% for _ in g.rating|get_range %}
+                                                <span class="glyphicon glyphicon-star"></span>
+                                            {% endfor %}
+                                        {% else %}
+                                            No Rating
+                                        {% endif %}
                                     </p>
                                 </div>
                             </div>
