@@ -5,26 +5,27 @@ import os
 import requests
 
 MASHAPE_KEY = os.environ.get('MASHAPE_API_KEY')
+GIANT_BOMB_KEY = os.environ.get('GIANT_BOMB_API_KEY')
 
 # Create your views here.
 def index(request):
 
     if request.method == "POST":
-        # request data using IGDB API
+        # request data
         game_name = request.POST.get('game')
-        url = ("https://igdbcom-internet-game-database-v1.p.mashape.com/games/" 
-                "?fields=*&limit=10&offset=0"
-                "&order=release_dates.date%3Adesc"
-                "&search={}".format(game_name))
-        headers = {'X-Mashape-Key': MASHAPE_KEY}
 
-        r = requests.get(url, headers=headers)
+        base_url = 'http://www.giantbomb.com/api/games'
+        params = {
+            'api_key': GIANT_BOMB_KEY,
+            'format': 'json',
+            'filter': 'name:{}'.format(game_name),
+            'limit': 5
+        }
+        headers = {'User-Agent': request.META['HTTP_USER_AGENT']}
 
-        # process data
-        games = r.json()
-        for g in games:
-            if 'rating' in g: g['rating'] = utils.score_to_star(g['rating'])
-        
+        r = requests.get(base_url, headers=headers, params=params)
+        games = r.json()['results']
+
         return render(request, 'gamesearch/index.html', {'games': games})
     else:
         return render(request, 'gamesearch/index.html')

@@ -125,25 +125,19 @@
                     {% for g in games %}
                         <div class="col-sm-12 col-lg-3 col-md-3">
                             <div class="thumbnail">
-                                {% if g.cover %}
-                                    <img class="img-responsive" src="{{ g.cover.url }}" alt="">
+                                {% if g.image.super_url %}
+                                    <img class="img-responsive" src="{{ g.image.super_url }}" alt="">
                                 {% else %}
                                     <img class="img-responsive" src="{% static 'gamesearch/images/No_Cover.jpg' %}" alt="">
                                 {% endif %}
                                 <div class="caption">
                                     <h4><a href="#">{{ g.name }}</a></h4>
-                                    <p>{{ g.summary }}</p>
+                                    <p>{{ g.deck }}</p>
                                 </div>
                                 <div class="ratings">
                                     <h4 class="pull-right">$24.99</h4>
                                     <p>
-                                        {% if g.rating %}
-                                            {% for _ in g.rating|get_range %}
-                                                <span class="glyphicon glyphicon-star"></span>
-                                            {% endfor %}
-                                        {% else %}
-                                            No Rating
-                                        {% endif %}
+                                        No rating.
                                     </p>
                                 </div>
                             </div>
