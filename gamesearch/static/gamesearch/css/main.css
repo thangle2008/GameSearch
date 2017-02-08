@@ -1,0 +1,13 @@
+.fix-height {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fix-height img {
+    width: 100%;
+    height: 150px;
+}
+
+.fix-height .summary {
+    height: 100px;
+}
