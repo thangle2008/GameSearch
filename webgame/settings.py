@@ -150,7 +150,7 @@ BOWER_INSTALLED_APPS = (
     'ResponsiveSlides',
     'flexslider#2.5.0',
     'simplecart-js',
-    'bootstrap-star-rating#4.0.1',
     'animate.css#3.5.2',
-    'owl.carousel#2.2.0'
+    'owl.carousel#2.2.0',
+    'raty#2.7.1'
 )
