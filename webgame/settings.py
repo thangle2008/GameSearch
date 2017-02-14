@@ -142,6 +142,9 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+# API_KEY
+GIANT_BOMB_KEY = os.environ.get('GIANT_BOMB_API_KEY')
+
 # Bower
 BOWER_COMPONENTS_ROOT = '/{}/components/'.format(PROJECT_ROOT)
 

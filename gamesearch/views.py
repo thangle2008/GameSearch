@@ -1,16 +1,13 @@
 from django.shortcuts import render
-from . import utils
+from utils import GBSearcher
 
 import os
-import requests
 
 from django.core.cache import cache
 
-MASHAPE_KEY = os.environ.get('MASHAPE_API_KEY')
-GIANT_BOMB_KEY = os.environ.get('GIANT_BOMB_API_KEY')
-
-# Create your views here.
 def index(request):
+
+    params = {}
 
     if request.method == "POST":
         # request data
@@ -22,21 +19,17 @@ def index(request):
         if games is None:
             print "request data on server"
 
-            base_url = 'http://www.giantbomb.com/api/games'
-            params = {
-                'api_key': GIANT_BOMB_KEY,
-                'format': 'json',
-                'filter': 'name:{}'.format(game_name),
-                'limit': 5
-            }
-            headers = {'User-Agent': request.META['HTTP_USER_AGENT']}
-
-            r = requests.get(base_url, headers=headers, params=params)
-            games = r.json()['results']
+            user_agent = request.META['HTTP_USER_AGENT']
+            games = GBSearcher.search_by_name(game_name, user_agent)
 
             # cache the search results to reduce number of api requests
             cache.set(cache_key, games)
 
-        return render(request, 'gamesearch/index.html', {'games': games})
-    else:
-        return render(request, 'gamesearch/index.html')
+        params = {'games': games}
+
+    return render(request, 'gamesearch/index.html', params)
+
+
+def game(request, game_id):
+
+    return render(request, 'gamesearch/game.html')
