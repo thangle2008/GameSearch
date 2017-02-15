@@ -1,12 +1,30 @@
 {% extends "gamesearch/base.html" %}
 {% block content %}
 <section>
-	<div class="container-fluid">
-		<div class="row">
-			Game Image
+	<div class="page-header text-center">
+		<h1>{{ game.name }}</h1>
+	</div>
+	<div class="container-fluid lead">
+		<div class="row" style="margin-bottom: 30px">
+			<div class="col-md-12 text-center">
+				<img src="{{ game.image.super_url }}" alt="">
+			</div>
+		</div>
+		<div class="row text-center">
+			<p><strong>Genres: </strong>{{ game.genres }}</p>
+			<p><strong>Platforms: </strong>{{ game.platforms }}</p>
 		</div>
 		<div class="row">
-			Game Summary
+			<div class="col-md-12">
+				<h3>Summary:</h3>
+				<p>{{ game.deck }}</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Rate this game:</h3>
+				<div class="rating rating-modify"></div>
+			</div>
 		</div>
 	</div>
 </section>

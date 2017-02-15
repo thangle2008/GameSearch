@@ -9,6 +9,7 @@
     height: 200px;
 }
 
-.fix-height .summary {
-    height: 100px;
+.container-fluid {
+    margin: 30px;
 }
+

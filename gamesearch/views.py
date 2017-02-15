@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.core.cache import cache
+
+from .models import Game
 from utils import GBSearcher
 
 import os
 
-from django.core.cache import cache
 
 def index(request):
 
@@ -25,6 +27,10 @@ def index(request):
             # cache the search results to reduce number of api requests
             cache.set(cache_key, games)
 
+            # add the games with their ratings to database
+            for g in games:
+                game_db, created = Game.objects.get_or_create(api_id=g['id'])
+
         params = {'games': games}
 
     return render(request, 'gamesearch/index.html', params)
@@ -32,4 +38,12 @@ def index(request):
 
 def game(request, game_id):
 
-    return render(request, 'gamesearch/game.html')
+    user_agent = request.META['HTTP_USER_AGENT']
+    game = GBSearcher.search_by_id(game_id, user_agent)
+
+    # concatenate game's genres and platforms
+    get_name = lambda x: x['name']
+    game['genres'] = ', '.join(map(get_name, game['genres']))
+    game['platforms'] = ', '.join(map(get_name, game['platforms']))
+
+    return render(request, 'gamesearch/game.html', {'game': game})
