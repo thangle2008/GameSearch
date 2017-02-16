@@ -27,10 +27,6 @@ def index(request):
             # cache the search results to reduce number of api requests
             cache.set(cache_key, games)
 
-            # add the games with their ratings to database
-            for g in games:
-                game_db, created = Game.objects.get_or_create(api_id=g['id'])
-
         params = {'games': games}
 
     return render(request, 'gamesearch/index.html', params)
@@ -38,12 +34,24 @@ def index(request):
 
 def game(request, game_id):
 
-    user_agent = request.META['HTTP_USER_AGENT']
-    game = GBSearcher.search_by_id(game_id, user_agent)
+    game, created = Game.objects.get_or_create(api_id=game_id)
 
-    # concatenate game's genres and platforms
-    get_name = lambda x: x['name']
-    game['genres'] = ', '.join(map(get_name, game['genres']))
-    game['platforms'] = ', '.join(map(get_name, game['platforms']))
+    # if this game is not in the database
+    if created:
+        print "request data on server"
+
+        user_agent = request.META['HTTP_USER_AGENT']
+        game_info = GBSearcher.search_by_id(game_id, user_agent)
+
+        game.name = game_info['name']
+        game.summary = game_info['deck']
+        game.cover_img = game_info['image']['super_url']
+
+        # concatenate game's genres and platforms
+        get_name = lambda x: x['name']
+        game.genres = ', '.join(map(get_name, game_info['genres']))
+        game.platforms = ', '.join(map(get_name, game_info['platforms']))
+
+        game.save()
 
     return render(request, 'gamesearch/game.html', {'game': game})
