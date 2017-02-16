@@ -47,3 +47,15 @@ def game(request, game_id):
     game['platforms'] = ', '.join(map(get_name, game['platforms']))
 
     return render(request, 'gamesearch/game.html', {'game': game})
+
+
+def topgames(request):
+    user_agent = request.META['HTTP_USER_AGENT']
+    # game = GBSearcher.search_by_id(game_id, user_agent)
+
+    # concatenate game's genres and platforms
+    # get_name = lambda x: x['name']
+    # game['genres'] = ', '.join(map(get_name, game['genres']))
+    # game['platforms'] = ', '.join(map(get_name, game['platforms']))
+
+    return render(request, 'gamesearch/topgames.html', {})
