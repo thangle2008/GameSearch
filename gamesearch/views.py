@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.cache import cache
 
-from .models import Game
+from .models import Game, Genre
 from utils import GBSearcher
 
 import os
@@ -46,12 +46,22 @@ def game(request, game_id):
         game.name = game_info['name']
         game.summary = game_info['deck']
         game.cover_img = game_info['image']['super_url']
+        game.description = game_info['description']
+        game.save()
 
-        # concatenate game's genres and platforms
-        get_name = lambda x: x['name']
-        game.genres = ', '.join(map(get_name, game_info['genres']))
-        game.platforms = ', '.join(map(get_name, game_info['platforms']))
+        # extract game's genres
+        get_info = lambda x: (x['id'], x['name'])
+        genres = map(get_info, game_info['genres'])
+
+        for gen in genres:
+            gen_id, gen_name = gen
+            new_gen = Genre(api_id=gen_id, name=gen_name)
+            new_gen.save()
+            game.genres.add(new_gen)
 
         game.save()
 
-    return render(request, 'gamesearch/game.html', {'game': game})
+    # concatenate all genres as a single string
+    genres = ', '.join(map( lambda x: x.name, game.genres.all() ))
+
+    return render(request, 'gamesearch/game.html', {'game': game, 'genres': genres})

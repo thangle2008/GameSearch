@@ -11,14 +11,16 @@
 			</div>
 		</div>
 		<div class="row text-center">
-			<p><strong>Genres: </strong>{{ game.genres }}</p>
-			<p><strong>Platforms: </strong>{{ game.platforms }}</p>
+			<p><strong>Genres: </strong>{{ genres }}</p>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
 				<h3>Summary:</h3>
 				<p>{{ game.summary }}</p>
 			</div>
+		</div>
+		<div class="row">
+				{{ game.description | safe}}
 		</div>
 		<div class="row">
 			<div class="col-md-12">
