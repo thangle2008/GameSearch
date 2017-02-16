@@ -15,9 +15,8 @@
 			<p><strong>Platforms: </strong>{{ game.platforms }}</p>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<h3>Summary:</h3>
-				<p>{{ game.deck }}</p>
+			<div class="col-md-12 giantbomb-data">
+				{{ game.description | safe }}
 			</div>
 		</div>
 		<div class="row">
