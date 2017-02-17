@@ -1,2 +1,3 @@
 *.pyc
 /webgame/components/
+db.sqlite3

@@ -6,7 +6,7 @@ from .models import Game
 class GameMethodTest(TestCase):
 
     def setUp(self):
-        Game.objects.create(api_id=2)
+        Game.objects.create(api_id=2, platforms='DS')
         Game.objects.create(api_id=3)
 
     def test_add_score(self):

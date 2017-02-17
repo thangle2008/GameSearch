@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.cache import cache
 
-from .models import Game
+from .models import Game, Genre
 from utils import GBSearcher
 
 import os
@@ -27,10 +27,6 @@ def index(request):
             # cache the search results to reduce number of api requests
             cache.set(cache_key, games)
 
-            # add the games with their ratings to database
-            for g in games:
-                game_db, created = Game.objects.get_or_create(api_id=g['id'])
-
         params = {'games': games}
 
     return render(request, 'gamesearch/index.html', params)
@@ -38,15 +34,37 @@ def index(request):
 
 def game(request, game_id):
 
-    user_agent = request.META['HTTP_USER_AGENT']
-    game = GBSearcher.search_by_id(game_id, user_agent)
+    game, created = Game.objects.get_or_create(api_id=game_id)
 
-    # concatenate game's genres and platforms
-    get_name = lambda x: x['name']
-    game['genres'] = ', '.join(map(get_name, game['genres']))
-    game['platforms'] = ', '.join(map(get_name, game['platforms']))
+    # if this game is not in the database
+    if created:
+        print "request data on server"
 
-    return render(request, 'gamesearch/game.html', {'game': game})
+        user_agent = request.META['HTTP_USER_AGENT']
+        game_info = GBSearcher.search_by_id(game_id, user_agent)
+
+        game.name = game_info['name']
+        game.summary = game_info['deck']
+        game.cover_img = game_info['image']['super_url']
+        game.description = game_info['description']
+        game.save()
+
+        # extract game's genres
+        get_info = lambda x: (x['id'], x['name'])
+        genres = map(get_info, game_info['genres'])
+
+        for gen in genres:
+            gen_id, gen_name = gen
+            new_gen = Genre(api_id=gen_id, name=gen_name)
+            new_gen.save()
+            game.genres.add(new_gen)
+
+        game.save()
+
+    # concatenate all genres as a single string
+    genres = ', '.join(map( lambda x: x.name, game.genres.all() ))
+
+   return render(request, 'gamesearch/game.html', {'game': game, 'genres': genres})
 
 
 def topgames(request):
@@ -57,5 +75,4 @@ def topgames(request):
     # get_name = lambda x: x['name']
     # game['genres'] = ', '.join(map(get_name, game['genres']))
     # game['platforms'] = ', '.join(map(get_name, game['platforms']))
-
     return render(request, 'gamesearch/topgames.html', {})
