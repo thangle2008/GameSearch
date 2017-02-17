@@ -64,7 +64,7 @@ def game(request, game_id):
     # concatenate all genres as a single string
     genres = ', '.join(map( lambda x: x.name, game.genres.all() ))
 
-   return render(request, 'gamesearch/game.html', {'game': game, 'genres': genres})
+    return render(request, 'gamesearch/game.html', {'game': game, 'genres': genres})
 
 
 def topgames(request):
