@@ -5,6 +5,7 @@ from .models import Game, Genre
 from utils import GBSearcher
 
 import os
+import sys
 
 
 def index(request):
@@ -20,6 +21,7 @@ def index(request):
 
         if games is None:
             print "request data on server"
+            sys.stdout.flush()
 
             user_agent = request.META['HTTP_USER_AGENT']
             games = GBSearcher.search_by_name(game_name, user_agent)

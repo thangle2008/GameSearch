@@ -25,7 +25,7 @@ SECRET_KEY = 'tqcyue=8h+x_xet8+9o5sn-442@diszuzw6%b2wkiaa%-%dr5m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,11 +87,42 @@ DATABASES = {
 # Caches
 # https://docs.djangoproject.com/en/1.10/topics/cache/
 
+os.environ['MEMCACHE_SERVERS'] = os.environ.get('MEMCACHIER_SERVERS', '').replace(',', ';')
+os.environ['MEMCACHE_USERNAME'] = os.environ.get('MEMCACHIER_USERNAME', '')
+os.environ['MEMCACHE_PASSWORD'] = os.environ.get('MEMCACHIER_PASSWORD', '')
+
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': '127.0.0.1:11211',
-        'TIMEOUT': 1800
+        # Use pylibmc
+        'BACKEND': 'django_pylibmc.memcached.PyLibMCCache',
+
+        # Use binary memcache protocol (needed for authentication)
+        'BINARY': True,
+
+        # TIMEOUT is not the connection timeout! It's the default expiration
+        # timeout that should be applied to keys! Setting it to `None`
+        # disables expiration.
+        'TIMEOUT': None,
+
+        'OPTIONS': {
+            # Enable faster IO
+            'tcp_nodelay': True,
+
+            # Keep connection alive
+            'tcp_keepalive': True,
+
+            # Timeout settings
+            'connect_timeout': 2000, # ms
+            'send_timeout': 750 * 1000, # us
+            'receive_timeout': 750 * 1000, # us
+            '_poll_timeout': 2000, # ms
+
+            # Better failover
+            'ketama': True,
+            'remove_failed': 1,
+            'retry_timeout': 2,
+            'dead_timeout': 30,
+        }
     }
 }
 
@@ -131,16 +162,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
-
-STATIC_ROOT = os.path.join(PROJECT_ROOT, "../")
-
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
 STATIC_URL = '/static/'
 
 STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # API_KEY
 GIANT_BOMB_KEY = os.environ.get('GIANT_BOMB_API_KEY')
@@ -151,7 +181,6 @@ BOWER_COMPONENTS_ROOT = '/{}/components/'.format(PROJECT_ROOT)
 BOWER_INSTALLED_APPS = (
     'bootstrap#3.3.7',
     'ResponsiveSlides',
-    'flexslider#2.5.0',
     'simplecart-js',
     'animate.css#3.5.2',
     'owl.carousel#2.2.0',

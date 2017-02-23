@@ -1,3 +1,6 @@
 *.pyc
 /webgame/components/
 db.sqlite3
+venv
+staticfiles
+.env
